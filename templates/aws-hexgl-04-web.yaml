@@ -1,0 +1,338 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: Creates Web Auto Scaling group
+
+Metadata:
+
+  Authors:
+    Description: James Radtke (jaradtke@amazon.com)
+  License:
+    Description: ' '
+
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+    - Label:
+        default: Web Parameters
+      Parameters:
+        - PHPVersion
+        - EC2KeyName
+        - WebInstanceType
+        - WebAsgMax
+        - WebAsgMin
+        - WebSecurityGroup
+        - NumberOfSubnets
+        - Subnet
+        - PublicAlbTargetGroupArn
+        - PublicAlbHostname
+        - SslCertificate
+    ParameterLabels:
+      EC2KeyName:
+        default: Existing Key Pair
+      NumberOfSubnets:
+        default: Number of subnets
+      PHPVersion:
+        default: PHP Version
+      PublicAlbTargetGroupArn:
+        default: Public Alb Target Group Arn
+      PublicAlbHostname:
+        default: Public Alb Hostname
+      SslCertificate:
+        default: ACM Cert attached to Public Alb
+      Subnet:
+        default: Subnets
+      WebAsgMax:
+        default: Web ASG Max
+      WebAsgMin:
+        default: Web ASG Min
+      WebInstanceType:
+        default: Web Instance Type
+      WebSecurityGroup:
+        default: Web Security Group
+
+Parameters:
+
+  EC2KeyName:
+    AllowedPattern: ^([a-zA-Z0-9 @.`~!#$%^&*()_+,\\-])*$
+    ConstraintDescription: Must be letters (upper or lower), numbers, and special characters.
+    Description: Name of an EC2 KeyPair. Your bastion & Web instances will launch with this KeyPair.
+    Type: AWS::EC2::KeyPair::KeyName
+  NumberOfSubnets:
+    AllowedValues:
+    - 2
+    - 3
+    - 4
+    - 5
+    - 6
+    Default: 3
+    Description: Number of subnets. This must match your selections in the list of subnets below.
+    Type: String 
+  PHPVersion:
+    AllowedValues:
+    - 7.0
+    Default: 7.0
+    Description: The version of PHP to install.
+    Type: String 
+  PublicAlbTargetGroupArn:
+    Description: The public application load balancer target group arn.
+    Type: String
+  PublicAlbHostname:
+    Description: The hostname of the public ALB http form (e.g. http://abdc-12345-xyz.<region>.elb.amazonaws.com)
+    Type: String
+  SslCertificate:
+    AllowedValues:
+      - True
+      - False
+    Default: False
+    Description: Is there an ACM SSL Certificate attached to the Public Alb?
+    Type:
+      String
+  Subnet:
+    Description: Select existing subnets. The number selected must match the number of subnets above. Subnets selected must be in separate AZs.
+    Type: List<AWS::EC2::Subnet::Id>
+  WebAsgMax:
+    AllowedPattern: ^((?!0$)[1-2]?[0-9]|30)$
+    ConstraintDescription: Must be a number between 1 and 30.
+    Default: 4
+    Description: Specifies the maximum number of EC2 instances in the Web Autoscaling Group.
+    Type: String
+  WebAsgMin:
+    AllowedPattern: ^([0-0]?[0-9]|10)$
+    ConstraintDescription: Must be a number between 0 and 10.
+    Default: 2
+    Description: Specifies the minimum number of EC2 instances in the Web Autoscaling Group.
+    Type: String
+  WebInstanceType:
+    AllowedValues:
+    - t2.nano 
+    - t2.micro 
+    - t2.small 
+    - t2.medium 
+    - t2.large 
+    ConstraintDescription: Must be a valid Amazon EC2 instance type.
+    Default: t2.small
+    Description: The Amazon EC2 instance type for your web instances.
+    Type: String
+  WebSecurityGroup:
+    Description: Select the web security group.
+    Type: AWS::EC2::SecurityGroup::Id
+
+Conditions:
+  NoSslCertificate:
+    !Equals [ False, !Ref SslCertificate ]
+  NumberOfSubnets1:
+    !Equals [ 1, !Ref NumberOfSubnets ]
+  NumberOfSubnets2:
+    !Equals [ 2, !Ref NumberOfSubnets ]
+  NumberOfSubnets3:
+    !Equals [ 3, !Ref NumberOfSubnets ]
+  NumberOfSubnets4:
+    !Equals [ 4, !Ref NumberOfSubnets ]
+  NumberOfSubnets5:
+    !Equals [ 5, !Ref NumberOfSubnets ]
+  NumberOfSubnets6:
+    !Equals [ 6, !Ref NumberOfSubnets ]
+  PHP70:
+    !Equals [ 7.0, !Ref PHPVersion ]
+  Subnet0: !Or
+    - !Condition NumberOfSubnets1
+    - !Condition NumberOfSubnets2
+    - !Condition NumberOfSubnets3
+    - !Condition NumberOfSubnets4
+    - !Condition NumberOfSubnets5
+    - !Condition NumberOfSubnets6
+  Subnet1: !Or
+    - !Condition NumberOfSubnets2
+    - !Condition NumberOfSubnets3
+    - !Condition NumberOfSubnets4
+    - !Condition NumberOfSubnets5
+    - !Condition NumberOfSubnets6
+  Subnet2: !Or
+    - !Condition NumberOfSubnets3
+    - !Condition NumberOfSubnets4
+    - !Condition NumberOfSubnets5
+    - !Condition NumberOfSubnets6
+  Subnet3: !Or
+    - !Condition NumberOfSubnets4
+    - !Condition NumberOfSubnets5
+    - !Condition NumberOfSubnets6
+  Subnet4: !Or
+    - !Condition NumberOfSubnets5
+    - !Condition NumberOfSubnets6
+  Subnet5: !Condition NumberOfSubnets6
+
+Mappings:
+
+  RegionMap:
+    us-east-1:
+      AMI: ami-55ef662f
+    us-east-2:
+      AMI: ami-15e9c770
+    us-west-1:
+      AMI: ami-a51f27c5
+    us-west-2:
+      AMI: ami-bf4193c7
+
+Resources:
+  WebInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: /
+      Roles:
+      - !Ref WebInstanceRole
+  WebInstanceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - ec2.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Path: /
+      Policies:
+      - PolicyName: logs
+        PolicyDocument:
+          Version: 2012-10-17
+          Statement:
+          - Effect: Allow
+            Action:
+            - logs:CreateLogGroup
+            - logs:CreateLogStream
+            - logs:PutLogEvents
+            - logs:DescribeLogStreams
+            Resource:
+            - arn:aws:logs:*:*:*
+  WebAutoScalingGroup:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      Cooldown: 60
+      HealthCheckGracePeriod: 120
+      HealthCheckType: EC2 
+      LaunchConfigurationName:
+            !Ref WebLaunchConfiguration70
+      MaxSize: !Ref WebAsgMax
+      MinSize: !Ref WebAsgMin
+      Tags:
+        - Key: Name
+          Value: !Join [ '', [ 'Web ASG / ', !Ref 'AWS::StackName' ] ]
+          PropagateAtLaunch: true
+      TargetGroupARNs:
+        - !Ref PublicAlbTargetGroupArn
+      VPCZoneIdentifier:
+        !If
+          [ NumberOfSubnets1,
+          [ !Select [ 0, !Ref Subnet ] ],
+          !If
+            [ NumberOfSubnets2,
+            [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ] ],
+            !If
+              [ NumberOfSubnets3,
+              [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ] ],
+              !If
+                [ NumberOfSubnets4,
+                [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ], !Select [ 3, !Ref Subnet ] ],
+                !If
+                  [ NumberOfSubnets5,
+                  [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ], !Select [ 3, !Ref Subnet ], !Select [ 4, !Ref Subnet ] ],
+                  [ !Select [ 0, !Ref Subnet ], !Select [ 1, !Ref Subnet ], !Select [ 2, !Ref Subnet ], !Select [ 3, !Ref Subnet ], !Select [ 4, !Ref Subnet ], !Select [ 5, !Ref Subnet ] ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+    CreationPolicy:
+      ResourceSignal:
+        Count: !Ref WebAsgMin
+        Timeout: PT5M
+
+  WebLaunchConfiguration70:
+    Condition: PHP70
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Metadata:
+      AWS::CloudFormation::Init:
+        configSets:
+          deploy_webserver:
+            - install_webserver
+            - install_hexgl
+            - add_healthcheck 
+            - add_phpinfo
+            - add_hostname
+            - start_webserver
+        install_webserver:
+          packages:
+            yum:
+              awslogs: []
+              httpd24: []
+              php70: []
+        install_hexgl:
+          packages:
+            yum:
+              git: []
+          commands:
+            pull_git_repo:
+              cwd: /var/www
+              command: "mv html html.bak; 
+                git clone git://github.com/cloudxabide/HexGL.git;
+                ln -s HexGL html;
+                restorecon -RFvv /var/www/html;"
+              ignoreErrors: false
+        add_healthcheck:
+          files:
+            /var/www/html/healthcheck.html:
+              content:
+                !Sub |
+                  <html>
+                  <head>
+                  </head>
+                  I am healthy yo.
+                  </html>
+              mode: 000555
+              owner: root
+              group: root
+        add_phpinfo:
+          files:
+            /var/www/html/phpinfo.php:
+              content:
+                !Sub |
+                  <html>
+                  <?php phpInfo(); ?>
+                  </html>
+              mode: 000555
+              owner: root
+              group: root
+        add_hostname:
+          commands:
+            create_file:
+              cwd: /var/www/html
+              command: "uname -n > /var/www/html/hostname.txt"
+              ignoreErrors: true
+              mode: 000555
+              owner: root
+              group: root
+        start_webserver:
+          services:
+            sysvinit:
+              httpd:
+                enabled: true
+                ensureRunning: true
+    Properties:
+      IamInstanceProfile: !Ref WebInstanceProfile
+      ImageId: !FindInMap [ RegionMap, !Ref 'AWS::Region', AMI ]
+      InstanceMonitoring: false 
+      InstanceType: !Ref WebInstanceType
+      KeyName: !Ref EC2KeyName
+      SecurityGroups:
+      - !Ref WebSecurityGroup
+      UserData:
+        "Fn::Base64":
+          !Sub |
+            #!/bin/bash -xe
+            yum update -y
+            /opt/aws/bin/cfn-init --configsets deploy_webserver --verbose --stack ${AWS::StackName} --resource WebLaunchConfiguration70 --region ${AWS::Region}
+            /opt/aws/bin/cfn-signal --exit-code $? --stack ${AWS::StackName} --resource WebAutoScalingGroup --region ${AWS::Region}
+
+
