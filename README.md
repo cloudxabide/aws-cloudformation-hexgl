@@ -6,15 +6,14 @@ Work in Progress:
   I am moving this to it's own Repo 
 
 ## Resources 
-[templates](templates) -- Adding route53 to my nested stack deployment.
-[templates/aws-hexgl-01-newvpc.yaml](templates/aws-hexgl-01-newvpc.yaml)
-[templates/aws-hexgl-02-securitygroups.yaml](templates/aws-hexgl-02-securitygroups.yaml)
-[templates/aws-hexgl-03-bastion.yaml](templates/aws-hexgl-03-bastion.yaml)
-[templates/aws-hexgl-03-publicalb.yaml](templates/aws-hexgl-03-publicalb.yaml)
-[templates/aws-hexgl-04-web.yaml](templates/aws-hexgl-04-web.yaml)
-[templates/aws-hexgl-05-route53.yaml](templates/aws-hexgl-05-route53.yaml)
-[templates/aws-hexgl-master-newvpc.yaml](templates/aws-hexgl-master-newvpc.yaml)
-
+[templates](templates) -- directory for all the nested templates  
+[templates/aws-hexgl-01-newvpc.yaml](templates/aws-hexgl-01-newvpc.yaml)  
+[templates/aws-hexgl-02-securitygroups.yaml](templates/aws-hexgl-02-securitygroups.yaml)  
+[templates/aws-hexgl-03-bastion.yaml](templates/aws-hexgl-03-bastion.yaml)  
+[templates/aws-hexgl-03-publicalb.yaml](templates/aws-hexgl-03-publicalb.yaml)  
+[templates/aws-hexgl-04-web.yaml](templates/aws-hexgl-04-web.yaml)  
+[templates/aws-hexgl-05-route53.yaml](templates/aws-hexgl-05-route53.yaml)  
+[templates/aws-hexgl-master-newvpc.yaml](templates/aws-hexgl-master-newvpc.yaml)  
 
 ## CFN Launch Links
 stackName: HEXGL
@@ -33,5 +32,5 @@ STACK_NAME="HEXGLE1"
 aws cloudformation create-stack --stack-name "${STACK_NAME}" --template-url https://s3.amazonaws.com/cloudxabide/aws-cloudformation/templates/aws-hexgl-master-newvpc.yaml --parameters https://s3.amazonaws.com/cloudxabide/aws-cloudformation/templates/params-${REGION}.json --region ${REGION} --capabilities CAPABILITY_IAM ${OPTIONS}
 ```
 ## References
-[Wordpress multi-AZ reference architecture](https://github.com/aws-samples/aws-refarch-wordpress)
+[Wordpress multi-AZ reference architecture](https://github.com/aws-samples/aws-refarch-wordpress)  
 [Tips and Tricks](./tips-n-tricks.md)
