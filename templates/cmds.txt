@@ -33,9 +33,7 @@ echo "]" >> ${OUTPUT}
 sed -i "s/us-east-1/${REGION}/g" $OUTPUT
 
 # Sync up this directory to my S3 bucket
-cd ../
-aws s3 sync `pwd` s3://cloudxabide/aws-cloudformation-hexgl/ --delete --acl public-read
-cd -
+aws s3 sync `pwd` s3://cloudxabide/aws-cloudformation-hexgl/templates/ --delete --acl public-read
 
 # NOTE:  you may need to run $ touch *   -- and then run the sync, if you need to update the public-read flag
 aws cloudformation create-stack --stack-name "${STACK_NAME}" --template-url https://s3.amazonaws.com/cloudxabide/aws-cloudformation-hexgl/templates/aws-hexgl-master-newvpc.yaml --parameters https://s3.amazonaws.com/cloudxabide/aws-cloudformation-hexgl/templates/params-${REGION}.json --region ${REGION} --capabilities CAPABILITY_IAM ${OPTIONS}
