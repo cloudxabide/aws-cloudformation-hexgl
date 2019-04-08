@@ -22,16 +22,16 @@ stackName: HEXGL
 
 | AWS Region | Region Name | Launch Button
 | --- | --- | ---
-| us-east-1 | US East (N. Virginia) |  [![cloudformation-launch-stack](images/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=HEXGL&templateURL=https://s3.amazonaws.com/cloudxabide/aws-cloudformation/templates/aws-hexgl-master-newvpc.yaml) |
-| us-east-2 | US East (Ohio) | [![cloudformation-launch-stack](images/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=HEXGL&templateURL=https://s3.amazonaws.com/cloudxabide/aws-cloudformation/templates/aws-hexgl-master-newvpc.yaml) |
-| us-west-1 | US West (N. California) | [![cloudformation-launch-stack](images/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/new?stackName=HEXGL&templateURL=https://s3.amazonaws.com/cloudxabide/aws-cloudformation/templates/aws-hexgl-master-newvpc.yaml) |
-| us-west-2 | US West (Oregon) | [![cloudformation-launch-stack](images/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=HEXGL&templateURL=https://s3.amazonaws.com/cloudxabide/aws-cloudformation/templates/aws-hexgl-master-newvpc.yaml) |
+| us-east-1 | US East (N. Virginia) |  [![cloudformation-launch-stack](images/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=HEXGL&templateURL=https://s3.amazonaws.com/cloudxabide/aws-cloudformation-hexgl/templates/aws-hexgl-master-newvpc.yaml) |
+| us-east-2 | US East (Ohio) | [![cloudformation-launch-stack](images/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=HEXGL&templateURL=https://s3.amazonaws.com/cloudxabide/aws-cloudformation-hexgl/templates/aws-hexgl-master-newvpc.yaml) |
+| us-west-1 | US West (N. California) | [![cloudformation-launch-stack](images/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/new?stackName=HEXGL&templateURL=https://s3.amazonaws.com/cloudxabide/aws-cloudformation-hexgl/templates/aws-hexgl-master-newvpc.yaml) |
+| us-west-2 | US West (Oregon) | [![cloudformation-launch-stack](images/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=HEXGL&templateURL=https://s3.amazonaws.com/cloudxabide/aws-cloudformation-hexgl/templates/aws-hexgl-master-newvpc.yaml) |
 
 Or, if you prefer the CLI:  
 ```
 REGION="us-east-1"
 STACK_NAME="HEXGLE1"
-aws cloudformation create-stack --stack-name "${STACK_NAME}" --template-url https://s3.amazonaws.com/cloudxabide/aws-cloudformation/templates/aws-hexgl-master-newvpc.yaml --parameters https://s3.amazonaws.com/cloudxabide/aws-cloudformation/templates/params-${REGION}.json --region ${REGION} --capabilities CAPABILITY_IAM ${OPTIONS}
+aws cloudformation create-stack --stack-name "${STACK_NAME}" --template-url https://s3.amazonaws.com/cloudxabide/aws-cloudformation-hexgl/templates/aws-hexgl-master-newvpc.yaml --parameters https://s3.amazonaws.com/cloudxabide/aws-cloudformation-hexgl/templates/params-${REGION}.json --region ${REGION} --capabilities CAPABILITY_IAM ${OPTIONS}
 ```
 ## References
 [Wordpress multi-AZ reference architecture](https://github.com/aws-samples/aws-refarch-wordpress)  
@@ -39,7 +39,7 @@ aws cloudformation create-stack --stack-name "${STACK_NAME}" --template-url http
 [HexGL BKcore](http://hexgl.bkcore.com/)
 
 ## Troubleshooting and "Lessons Learned"
-### Reference Architectures may not be infallable over time
+### Reference Architectures may not be infallible over time  
 While I was debriefing and explaining that I had discovered a potential issue with the Reference Architecture  to one of our senior DevOps folks, he replied "Ya... I told you... this happens".  He was referring to a previous conversation about some old technical debt and how it had once been a Gold Standard and now needed refactoring because of extended periods of neglect and changing infrastrcuture.
 
 Observe the following code (and see if you can immediately see what the potential issue is/was:
