@@ -1,6 +1,6 @@
 # aws-cloudformation-hexgl
 ## Purpose:  
-Deploy a multi-AZ instance of blkcore's HexGL game.  Additionally this example employs a nested stack approach - each stack addressing a particular "concern".  
+Deploy a multi-AZ instance of bkcore's HexGL game.  Additionally this example employs a nested stack approach - each stack addressing a particular "concern".  
 This was particularly fun.  I learned some (nuanced) things while exploring the addition of route53 (code below).
 
 ## Status
@@ -35,8 +35,8 @@ aws cloudformation create-stack --stack-name "${STACK_NAME}" --template-url http
 ```
 ## References
 [Wordpress multi-AZ reference architecture](https://github.com/aws-samples/aws-refarch-wordpress)  
-[Tips and Tricks](./tips-n-tricks.md)
-http://hexgl.bkcore.com/
+[Tips and Tricks](./tips-n-tricks.md)  
+[HexGL BKcore](http://hexgl.bkcore.com/)
 
 ## Troubleshooting and "Lessons Learned"
 ### Reference Architectures may not be infallable over time
