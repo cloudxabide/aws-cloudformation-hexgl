@@ -34,7 +34,7 @@ STACK_NAME="HEXGLE1"
 aws cloudformation create-stack --stack-name "${STACK_NAME}" --template-url https://s3.amazonaws.com/cloudxabide/aws-cloudformation-hexgl/templates/aws-hexgl-master-newvpc.yaml --parameters https://s3.amazonaws.com/cloudxabide/aws-cloudformation-hexgl/templates/params-${REGION}.json --region ${REGION} --capabilities CAPABILITY_IAM ${OPTIONS}
 ```
 ## References
-[Wordpress multi-AZ reference architecture](https://github.com/aws-samples/aws-refarch-wordpress)  
+[Wordpress multi-AZ reference architecture](https://github.com/aws-samples/aws-refarch-wordpress)  This is the example from which I based my work on.  
 [Tips and Tricks](./tips-n-tricks.md)  
 [HexGL BKcore](http://hexgl.bkcore.com/)
 
