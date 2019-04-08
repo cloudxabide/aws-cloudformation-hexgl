@@ -1,13 +1,14 @@
 # aws-cloudformation-hexgl
 ## Purpose:  
-Deploy a multi-AZ instance of bkcore's HexGL game.  
+Deploy a multi-AZ instance of blkcore's HexGL game.  Additionally this example employs a nested stack approach - each stack addressing a particular "concern".  
 This was particularly fun.  I learned some (nuanced) things while exploring the addition of route53 (code below).
 
 ## Status
 Work in Progress: 
-  I am moving this to it's own Repo 
+I decided to put all this in it's own repo and may still need some tweaking as a result.
 
 ## Resources 
+The file names should be fairly explanatory.  
 [templates](templates) -- directory for all the nested templates  
 [templates/aws-hexgl-01-newvpc.yaml](templates/aws-hexgl-01-newvpc.yaml)  
 [templates/aws-hexgl-02-securitygroups.yaml](templates/aws-hexgl-02-securitygroups.yaml)  
@@ -15,7 +16,6 @@ Work in Progress:
 [templates/aws-hexgl-03-publicalb.yaml](templates/aws-hexgl-03-publicalb.yaml)  
 [templates/aws-hexgl-04-web.yaml](templates/aws-hexgl-04-web.yaml)  
 [templates/aws-hexgl-05-route53.yaml](templates/aws-hexgl-05-route53.yaml)  
-[templates/aws-hexgl-master-newvpc.yaml](templates/aws-hexgl-master-newvpc.yaml)  
 
 ## CFN Launch Links
 stackName: HEXGL
@@ -27,7 +27,7 @@ stackName: HEXGL
 | us-west-1 | US West (N. California) | [![cloudformation-launch-stack](images/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/new?stackName=HEXGL&templateURL=https://s3.amazonaws.com/cloudxabide/aws-cloudformation/templates/aws-hexgl-master-newvpc.yaml) |
 | us-west-2 | US West (Oregon) | [![cloudformation-launch-stack](images/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=HEXGL&templateURL=https://s3.amazonaws.com/cloudxabide/aws-cloudformation/templates/aws-hexgl-master-newvpc.yaml) |
 
-If you prefer the CLI
+Or, if you prefer the CLI:  
 ```
 REGION="us-east-1"
 STACK_NAME="HEXGLE1"
