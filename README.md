@@ -59,8 +59,14 @@ $ aws route53 list-resource-record-sets --hosted-zone-id Z1F045AL9FKCNH | grep H
                 "HostedZoneId": "Z3AADJGX6KTTL2",
                 "HostedZoneId": "Z1H1FL5HABSF5",
 
-Z1H1 FL5H ABSF 5   (fail)
 Z368 ELLR RE2K J0  (succeed)
+Z1H1 FL5H ABSF 5   (fail)
+```
+For fun...
+```
+for ENTRY in `aws route53 list-resource-record-sets --hosted-zone-id Z1F045AL9FKCNH | grep HostedZoneId | awk -F'"' '$0=$4'`; do echo $ENTRY | wc ; done
+         1       1      15
+         1       1      14
 ```
 
 I have not been able to find what the "standard" is regarding the length, but, for now, I have modified the code.
