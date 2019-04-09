@@ -64,7 +64,7 @@ Z1H1 FL5H ABSF 5   (fail)
 ```
 For fun...
 ```
-for ENTRY in `aws route53 list-resource-record-sets --hosted-zone-id Z1F045AL9FKCNH | grep HostedZoneId | awk -F'"' '$0=$4'`; do echo $ENTRY | wc ; done
+$ for ENTRY in `aws route53 list-resource-record-sets --hosted-zone-id Z1F045AL9FKCNH | grep HostedZoneId | awk -F'"' '$0=$4'`; do echo $ENTRY | wc ; done
          1       1      15
          1       1      14
 ```
