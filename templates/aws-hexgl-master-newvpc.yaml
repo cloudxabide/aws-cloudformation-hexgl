@@ -316,7 +316,7 @@ Resources:
           !Ref NumberOfAZs
         Subnet:
           !GetAtt [ newvpc, Outputs.PublicSubnet ]
-      TemplateURL: https://s3.amazonaws.com/cloudxabide/aws-cloudformation/98-newvpc-multiAZ-wSSL/aws-hexgl-03-bastion.yaml
+      TemplateURL: https://s3.amazonaws.com/cloudxabide/aws-cloudformation-hexgl/templates/aws-hexgl-03-bastion.yaml
   newvpc:
     Type: AWS::CloudFormation::Stack
     Properties:
@@ -355,7 +355,7 @@ Resources:
           !Ref WebSubnet4Cidr
         WebSubnet5Cidr:
           !Ref WebSubnet5Cidr
-      TemplateURL: https://s3.amazonaws.com/cloudxabide/aws-cloudformation/98-newvpc-multiAZ-wSSL/aws-hexgl-01-newvpc.yaml
+      TemplateURL: https://s3.amazonaws.com/cloudxabide/aws-cloudformation-hexgl/templates/aws-hexgl-01-newvpc.yaml
   publicalb:
     Condition: AvailableAWSRegion
     DependsOn: [ newvpc, securitygroups ]
@@ -372,7 +372,7 @@ Resources:
           !GetAtt [ securitygroups, Outputs.PublicAlbSecurityGroup ]
         Vpc:
           !GetAtt [ newvpc, Outputs.Vpc ]
-      TemplateURL: https://s3.amazonaws.com/cloudxabide/aws-cloudformation/98-newvpc-multiAZ-wSSL/aws-hexgl-03-publicalb.yaml
+      TemplateURL: https://s3.amazonaws.com/cloudxabide/aws-cloudformation-hexgl/templates/aws-hexgl-03-publicalb.yaml
   route53:
     Condition: CreateRecordSet
     DependsOn: [ publicalb, web ]
@@ -387,7 +387,7 @@ Resources:
           !Ref AppDomainName
         AppName:
           !Ref AppName
-      TemplateURL: https://s3.amazonaws.com/cloudxabide/aws-cloudformation/98-newvpc-multiAZ-wSSL/aws-hexgl-05-route53.yaml
+      TemplateURL: https://s3.amazonaws.com/cloudxabide/aws-cloudformation-hexgl/templates/aws-hexgl-05-route53.yaml
   securitygroups:
     Condition: AvailableAWSRegion
     DependsOn: newvpc
@@ -398,7 +398,7 @@ Resources:
           !Ref SshAccessCidr
         Vpc:
           !GetAtt [ newvpc, Outputs.Vpc ]
-      TemplateURL: https://s3.amazonaws.com/cloudxabide/aws-cloudformation/98-newvpc-multiAZ-wSSL/aws-hexgl-02-securitygroups.yaml
+      TemplateURL: https://s3.amazonaws.com/cloudxabide/aws-cloudformation-hexgl/templates/aws-hexgl-02-securitygroups.yaml
   web:
     Condition: AvailableAWSRegion
     DependsOn: [ newvpc, publicalb, securitygroups ]
@@ -427,7 +427,7 @@ Resources:
           !GetAtt [ securitygroups, Outputs.WebSecurityGroup ]
         Subnet:
           !GetAtt [ newvpc, Outputs.WebSubnet ]
-      TemplateURL: https://s3.amazonaws.com/cloudxabide/aws-cloudformation/98-newvpc-multiAZ-wSSL/aws-hexgl-04-web.yaml
+      TemplateURL: https://s3.amazonaws.com/cloudxabide/aws-cloudformation-hexgl/templates/aws-hexgl-04-web.yaml
 
 Outputs:
 
