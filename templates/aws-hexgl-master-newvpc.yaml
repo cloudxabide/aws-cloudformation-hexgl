@@ -302,7 +302,7 @@ Resources:
 
   bastion:
     Condition: AvailableAWSRegion
-    DependsOn: [ newvpc, securitygroups ]
+    DependsOn: [ hexvpc, securitygroups ]
     Type: AWS::CloudFormation::Stack
     Properties:
       Parameters:
@@ -315,9 +315,9 @@ Resources:
         NumberOfSubnets:
           !Ref NumberOfAZs
         Subnet:
-          !GetAtt [ newvpc, Outputs.PublicSubnet ]
+          !GetAtt [ hexvpc, Outputs.PublicSubnet ]
       TemplateURL: https://s3.amazonaws.com/cloudxabide/aws-cloudformation-hexgl/templates/aws-hexgl-03-bastion.yaml
-  newvpc:
+  hexvpc:
     Type: AWS::CloudFormation::Stack
     Properties:
       Parameters:
@@ -355,23 +355,23 @@ Resources:
           !Ref WebSubnet4Cidr
         WebSubnet5Cidr:
           !Ref WebSubnet5Cidr
-      TemplateURL: https://s3.amazonaws.com/cloudxabide/aws-cloudformation-hexgl/templates/aws-hexgl-01-newvpc.yaml
+      TemplateURL: https://s3.amazonaws.com/cloudxabide/aws-cloudformation-hexgl/templates/aws-hexgl-01-hexvpc.yaml
   publicalb:
     Condition: AvailableAWSRegion
-    DependsOn: [ newvpc, securitygroups ]
+    DependsOn: [ hexvpc, securitygroups ]
     Type: AWS::CloudFormation::Stack
     Properties:
       Parameters:
         NumberOfSubnets:
           !Ref NumberOfAZs
         Subnet:
-          !GetAtt [ newvpc, Outputs.PublicSubnet ]
+          !GetAtt [ hexvpc, Outputs.PublicSubnet ]
         PublicAlbAcmCertificate:
           !Ref PublicAlbAcmCertificate
         PublicAlbSecurityGroup:
           !GetAtt [ securitygroups, Outputs.PublicAlbSecurityGroup ]
         Vpc:
-          !GetAtt [ newvpc, Outputs.Vpc ]
+          !GetAtt [ hexvpc, Outputs.Vpc ]
       TemplateURL: https://s3.amazonaws.com/cloudxabide/aws-cloudformation-hexgl/templates/aws-hexgl-03-publicalb.yaml
   route53:
     Condition: CreateRecordSet
@@ -390,18 +390,18 @@ Resources:
       TemplateURL: https://s3.amazonaws.com/cloudxabide/aws-cloudformation-hexgl/templates/aws-hexgl-05-route53.yaml
   securitygroups:
     Condition: AvailableAWSRegion
-    DependsOn: newvpc
+    DependsOn: hexvpc
     Type: AWS::CloudFormation::Stack
     Properties:
       Parameters:
         SshAccessCidr:
           !Ref SshAccessCidr
         Vpc:
-          !GetAtt [ newvpc, Outputs.Vpc ]
+          !GetAtt [ hexvpc, Outputs.Vpc ]
       TemplateURL: https://s3.amazonaws.com/cloudxabide/aws-cloudformation-hexgl/templates/aws-hexgl-02-securitygroups.yaml
   web:
     Condition: AvailableAWSRegion
-    DependsOn: [ newvpc, publicalb, securitygroups ]
+    DependsOn: [ hexvpc, publicalb, securitygroups ]
     Type: AWS::CloudFormation::Stack
     Properties:
       Parameters:
@@ -426,7 +426,7 @@ Resources:
         WebSecurityGroup:
           !GetAtt [ securitygroups, Outputs.WebSecurityGroup ]
         Subnet:
-          !GetAtt [ newvpc, Outputs.WebSubnet ]
+          !GetAtt [ hexvpc, Outputs.WebSubnet ]
       TemplateURL: https://s3.amazonaws.com/cloudxabide/aws-cloudformation-hexgl/templates/aws-hexgl-04-web.yaml
 
 Outputs:

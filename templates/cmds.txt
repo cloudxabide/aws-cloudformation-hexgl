@@ -36,7 +36,7 @@ sed -i "s/us-east-1/${REGION}/g" $OUTPUT
 aws s3 sync `pwd` s3://cloudxabide/aws-cloudformation-hexgl-hexgl/templates/ --delete --acl public-read
 
 # NOTE:  you may need to run $ touch *   -- and then run the sync, if you need to update the public-read flag
-aws cloudformation create-stack --stack-name "${STACK_NAME}" --template-url https://s3.amazonaws.com/cloudxabide/aws-cloudformation-hexgl-hexgl/templates/aws-hexgl-master-newvpc.yaml --parameters https://s3.amazonaws.com/cloudxabide/aws-cloudformation-hexgl-hexgl/templates/params-${REGION}.json --region ${REGION} --capabilities CAPABILITY_IAM ${OPTIONS}
+aws cloudformation create-stack --stack-name "${STACK_NAME}" --template-url https://s3.amazonaws.com/cloudxabide/aws-cloudformation-hexgl-hexgl/templates/aws-hexgl-master-hexvpc.yaml --parameters https://s3.amazonaws.com/cloudxabide/aws-cloudformation-hexgl-hexgl/templates/params-${REGION}.json --region ${REGION} --capabilities CAPABILITY_IAM ${OPTIONS}
 aws cloudformation describe-stack-events --stack-name "${STACK_NAME}" --region ${REGION}
 aws cloudformation delete-stack --stack-name "${STACK_NAME}" --region ${REGION}
 
