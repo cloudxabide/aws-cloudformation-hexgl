@@ -31,7 +31,7 @@ Or, if you prefer the CLI:
 ```
 REGION="us-east-1"
 STACK_NAME="HEXGLE1"
-aws cloudformation create-stack --stack-name "${STACK_NAME}" --template-url https://s3.amazonaws.com/cloudxabide/aws-cloudformation-hexgl/templates/aws-hexgl-master-newvpc.yaml --parameters https://s3.amazonaws.com/cloudxabide/aws-cloudformation-hexgl/templates/params-${REGION}.json --region ${REGION} --capabilities CAPABILITY_IAM ${OPTIONS}
+aws cloudformation create-stack --stack-name "${STACK_NAME}" --template-url https://s3.amazonaws.com/cloudxabide/aws-cloudformation-hexgl/templates/aws-hexgl-master-newvpc.yaml --parameters https://s3.amazonaws.com/cloudxabide/aws-cloudformation-hexgl/Params/params-${REGION}.json --region ${REGION} --capabilities CAPABILITY_IAM ${OPTIONS}
 ```
 ## References
 [Wordpress multi-AZ reference architecture](https://github.com/aws-samples/aws-refarch-wordpress)  This is the example from which I based my work on.  
